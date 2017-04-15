@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/prism.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ghpages-materialize.css') }}" media="screen,projection">
+  <script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
 </head>
 <body>
   <header>
