@@ -1,23 +1,11 @@
 import os
+import requests
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 import json
 import urlparse
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
-driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
-driver.get('https://laulima.hawaii.edu/portal/relogin')
-
-username = driver.find_element_by_id("eid")
-password = driver.find_element_by_id("pw")
-
-username.send_keys("tcchong")
-password.send_keys("&3gL2a49Qu67")
-
-driver.find_element_by_name("submit").click()
-
-driver.quit()
 
 app = Flask(__name__)
 
@@ -77,6 +65,22 @@ def static_proxy(path):
 @app.route('/login')
 def login():
     return render_template('pages/login.html')
+
+@app.route('/login', methods=['POST'])
+def handle_data():
+    driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+    driver.get('https://laulima.hawaii.edu/portal/relogin')
+
+    username = driver.find_element_by_id("eid")
+    password = driver.find_element_by_id("pw")
+
+    username.send_keys(request.form['user_name'])
+    password.send_keys(request.form['password'])
+
+    driver.find_element_by_name("submit").click()
+
+    driver.quit()
+    print request.form
 
 @app.route('/favicon.ico')
 def favicon():
