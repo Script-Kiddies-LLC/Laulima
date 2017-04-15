@@ -1,9 +1,23 @@
 import os
-# import requests
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, send_from_directory
 import json
 import urlparse
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+driver.get('https://laulima.hawaii.edu/portal/relogin')
+
+username = driver.find_element_by_id("eid")
+password = driver.find_element_by_id("pw")
+
+username.send_keys("tcchong")
+password.send_keys("&3gL2a49Qu67")
+
+driver.find_element_by_name("submit").click()
+
+driver.quit()
 
 app = Flask(__name__)
 
