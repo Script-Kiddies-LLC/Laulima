@@ -79,9 +79,15 @@ def handle_data():
 
     driver.find_element_by_name("submit").click()
 
-    # Check if Logged In
+    elements = driver.find_elements_by_class_name('alertMessage')
+
+    # Check if Logged In ( if elements[0].text == 'Invalid login' )
     # If Valid, grab data from index page and display
     # Else Send Back Response
+    if (str(elements[0].text) == 'Invalid login'):
+        print 'Invalid Login!'
+    else:
+        print 'Valid Login!'
 
     driver.quit()
     return redirect(url_for('index'))
