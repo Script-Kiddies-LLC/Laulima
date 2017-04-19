@@ -27,7 +27,8 @@ class Login extends React.Component {
             </div>
             <div id="result"></div>
             <div className="row">
-              <button className="btn waves-effect waves-light" type="submit" name="action">Submit
+              <button onClick="function() {return false;}"className="btn waves-effect waves-light" type="submit" name="action">
+                Submit
                 <i className="material-icons right">send</i>
               </button>
            </div>

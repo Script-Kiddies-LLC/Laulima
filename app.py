@@ -1,7 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, send_from_directory, request
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for
 import json
 import urlparse
 from selenium import webdriver
@@ -66,7 +66,7 @@ def static_proxy(path):
 def login():
     return render_template('pages/login.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/', methods=['POST'])
 def handle_data():
     driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
     driver.get('https://laulima.hawaii.edu/portal/relogin')
@@ -79,8 +79,12 @@ def handle_data():
 
     driver.find_element_by_name("submit").click()
 
+    # Check if Logged In
+    # If Valid, grab data from index page and display
+    # Else Send Back Response
+
     driver.quit()
-    print request.form
+    return redirect(url_for('index'))
 
 @app.route('/favicon.ico')
 def favicon():
