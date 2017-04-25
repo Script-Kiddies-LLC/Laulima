@@ -11,6 +11,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/data')
+def data():
     # f = open('copied_html/index.html', 'r')
     # html = f.read()
     # # result = requests.get('https://laulima.hawaii.edu/portal')
