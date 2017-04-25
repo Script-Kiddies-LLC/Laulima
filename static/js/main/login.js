@@ -19,8 +19,9 @@ class Login extends React.Component {
   }
   handleSubmit() {
     this.props.loginAuth(this.state, (function (status) {
+      console.log(status);
       if (status.status_code === 200 && status.text === "Successful Authentication!") {
-        this.props.succesfulAuth();
+        this.props.succesfulAuth(status);
       }
     }).bind(this));
   }

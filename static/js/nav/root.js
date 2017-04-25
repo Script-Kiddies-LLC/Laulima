@@ -26,22 +26,26 @@ class Root extends React.Component {
           </li>
           <li className="no-padding">
             <ul className="collapsible collapsible-accordion">
-              {/* {% for item in nav %}
-                <li class="bold">
-                  <a class="collapsible-header waves-effect waves-teal">
-                    {{ item.text }}
-                  </a>
-                  <div class="collapsible-body">
-                    <ul>
-                      {% for tag in item.a %}
-                        <li>
-                          <a href="{{ tag.href }}">{{ tag.text }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                </li>
-              {% endfor %} */}
+              {this.props.tabs.map(function(row, i) {
+                return(
+                  <li class="bold">
+                    <a class="collapsible-header waves-effect waves-teal">
+                      { row.text }
+                    </a>
+                    <div class="collapsible-body">
+                      <ul>
+                        {row.a.map(function(col, j) {
+                          return(
+                            <li>
+                              <a href={col.href}>{col.text}</a>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           </li>
         </ul>

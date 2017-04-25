@@ -6,12 +6,14 @@ class Root extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      authenticated: false
+      authenticated: false,
+      nav: []
     }
     this.loginAuth = this.loginAuth.bind(this);
     this.successfulAuth = this.succesfulAuth.bind(this);
   };
-  succesfulAuth() {
+  succesfulAuth(status) {
+    this.setState({nav: status.data.nav});
     this.setState({authenticated: true});
   }
   loginAuth(state, cb) {
@@ -32,7 +34,9 @@ class Root extends React.Component {
     return (
       <div>
         <header>
-          <Nav />
+          <Nav
+            tabs={this.state.nav}
+          />
         </header>
         <main>
           <Main

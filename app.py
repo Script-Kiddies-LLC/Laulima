@@ -15,47 +15,6 @@ def index():
 
 @app.route('/data')
 def data():
-    # f = open('copied_html/index.html', 'r')
-    # html = f.read()
-    # # result = requests.get('https://laulima.hawaii.edu/portal')
-    # # Probably Selenium
-    # soup = BeautifulSoup(html, 'lxml')
-    # tit = soup.find('span', 'siteTitle').get_text()[:-1]
-    # OBJ = {
-    #     'nav': [],
-    #     'body': {
-    #         'sections': []
-    #     }
-    # }
-    # # Content
-    # titles = []
-    # bodies = []
-    # i = 0
-    # for div in soup.find_all('div', 'portletTitleWrap'):
-    #     for title in div.find_all('div', 'title'):
-    #         titles.append(title.getText())
-    # for div in soup.find_all('div', 'portletMainWrap'):
-    #     i = i + 1
-    #     iframe = div.find('iframe')
-    #     if (iframe):
-    #         if(not bool(urlparse.urlparse(iframe.attrs['src']).netloc)):
-    #             iframe.attrs['src'] = 'https://laulima.hawaii.edu' + iframe.attrs['src']
-    #         obj = {'src': iframe.attrs['src']}
-    #         bodies.append(obj)
-    #     else:
-    #         titles.pop(i)
-    #
-    # for idx, val in enumerate(titles):
-    #     obj = {}
-    #     obj[val] = bodies[idx]
-    #     OBJ['body']['sections'].append(obj)
-    # # Nav Bar
-    # for li in soup.find_all('li', 'nav-menu'):
-    #     obj = {'text': li.find(text=True, recursive=True), 'a': []}
-    #     for ul in li.find_all('ul'):
-    #         for a in ul.find_all('a'):
-    #             obj['a'].append({'href': a.attrs['href'], 'text': a.getText()})
-    #     OBJ['nav'].append(obj)
     return render_template('index.html')
 
 @app.route('/<path:path>')
@@ -67,6 +26,7 @@ def handle_data():
     if (not request.form['username'] or not request.form['password']):
         return redirect(url_for('index'))
     driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+    driver.set_window_size(1300, 700)
     driver.get('https://laulima.hawaii.edu/portal/relogin')
 
     username = driver.find_element_by_id("eid")
@@ -79,16 +39,63 @@ def handle_data():
 
     elements = driver.find_elements_by_class_name('alertMessage')
 
+    # Object to return
+    json = {
+        'data': {
+            'nav': [],
+            'body': {
+                'sections': []
+            }
+        },
+        'status_code': '',
+        'text': ''
+    }
+    # Getting information
+    drop = driver.find_elements_by_class_name('drop')
+    for span in drop:
+        span.click()
+
+    soup = BeautifulSoup(driver.page_source, 'lxml')
+    # Content
+    titles = []
+    bodies = []
+    i = 0
+    for div in soup.find_all('div', 'portletTitleWrap'):
+        for title in div.find_all('div', 'title'):
+            titles.append(title.getText())
+    for div in soup.find_all('div', 'portletMainWrap'):
+        i = i + 1
+        iframe = div.find('iframe')
+        if (iframe):
+            if(not bool(urlparse.urlparse(iframe.attrs['src']).netloc)):
+                iframe.attrs['src'] = 'https://laulima.hawaii.edu' + iframe.attrs['src']
+            obj = {'src': iframe.attrs['src']}
+            bodies.append(obj)
+        else:
+            titles.pop(i)
+
+    for idx, val in enumerate(titles):
+        obj = {}
+        obj[val] = bodies[idx]
+        json['data']['body']['sections'].append(obj)
+    # Nav Bar
+    for li in soup.find_all('li', 'nav-menu'):
+        obj = {'text': li.find(text=True, recursive=True), 'a': []}
+        for ul in li.find_all('ul'):
+            for a in ul.find_all('a'):
+                obj['a'].append({'href': a.attrs['href'], 'text': a.getText()})
+        json['data']['nav'].append(obj)
+
     if (str(elements[0].text) == 'Invalid login'):
         driver.quit()
-        return jsonify(status_code=401,
-            text='Unsuccessful Authentication.'
-        )
+        json['status_code'] = 401
+        json['text'] = 'Unsuccessful Authentication.'
+        return jsonify(json)
     else:
         driver.quit()
-        return jsonify(status_code=200,
-            text='Successful Authentication!'
-        )
+        json['status_code'] = 200
+        json['text'] = 'Successful Authentication!'
+        return jsonify(json)
 
 @app.route('/favicon.ico')
 def favicon():
