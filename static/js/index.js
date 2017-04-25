@@ -6,13 +6,12 @@ import {
   Link
 } from 'react-router-dom';
 import Root from './root';
-import Login from './login';
 
 ReactDOM.render((
   <HashRouter>
     <div>
       <Route exact path='/' component={Root} />
-      <Route path='/login' component={Login} />
+      {/* <Route path='/login' component={Login} /> */}
       {/* <Route path="*" component={NoMatch}/> */}
     </div>
   </HashRouter>

@@ -1,28 +1,51 @@
 import React from 'react';
+import Nav from './nav/root.js';
+import Main from './main/root.js';
 
 class Root extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      authenticated: false,
+      username: null,
+      password: null
+    }
+    this.loginAuth = this.loginAuth.bind(this);
+  };
+  loginAuth() {
+    console.log('Testing!...');
+    console.log($('#username').text())
+    console.log($('#password').text())
+    fetch('/', {
+      'method': 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: $('#username').text(),
+        password: $('password').text()
+      })
+    })
+  };
+  componentDidMount() {
+    console.log(this.state);
+  };
   render() {
     return (
-      <center>
-        <div className="row teal accent-3">
-          <h1 className="white-text" style={{margin: 0, padding: '10px 0 10px 0'}}> </h1>
-        </div>
-        <div className="row">
-          <div className="sections">
-          </div>
-          {/* {this.props.body.sections.map(function(e, i) {
-            return(
-              <div className="col s10 offset-s1 l10 offset-l1">
-                <div className="card-panel">
-                  <h4 style={{borderBottom: '3px solid #333'}}>{ section.keys()[0] }</h4>
-                  <iframe src="{{section.values()[0]['src']}}" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
-                </div>
-              </div>
-            )
-          })
-          } */}
-        </div>
-      </center>
+      <div>
+        <header>
+          <Nav />
+        </header>
+        <main>
+          <Main
+            authenticated={this.state.authenticated}
+            loginAuth={this.loginAuth}
+          />
+        </main>
+        <footer>
+        </footer>
+      </div>
     );
   }
 }
