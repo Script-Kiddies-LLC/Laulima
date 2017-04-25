@@ -12,7 +12,6 @@ class Root extends React.Component {
           <Login
             loginAuth={this.props.loginAuth}
             succesfulAuth={this.props.succesfulAuth}
-            rerender={this.rerender}
           />
         ) : (
           <h1> Authenticated Successfully </h1>

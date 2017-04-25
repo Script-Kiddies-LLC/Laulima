@@ -75,9 +75,6 @@ def handle_data():
 
     elements = driver.find_elements_by_class_name('alertMessage')
 
-    # Check if Logged In ( if elements[0].text == 'Invalid login' )
-    # If Valid, grab data from index page and display
-    # Else Send Back Response
     if (str(elements[0].text) == 'Invalid login'):
         driver.quit()
         return jsonify(status_code=401,
@@ -88,7 +85,6 @@ def handle_data():
         return jsonify(status_code=200,
             text='Successful Authentication!'
         )
-    return redirect(url_for('index'))
 
 @app.route('/favicon.ico')
 def favicon():
