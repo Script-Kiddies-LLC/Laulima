@@ -6,27 +6,24 @@ class Root extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      authenticated: false,
-      username: null,
-      password: null
+      authenticated: false
     }
     this.loginAuth = this.loginAuth.bind(this);
+    this.successfulAuth = this.succesfulAuth.bind(this);
   };
-  loginAuth() {
-    console.log('Testing!...');
-    console.log($('#username').text())
-    console.log($('#password').text())
-    fetch('/', {
-      'method': 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: $('#username').text(),
-        password: $('password').text()
-      })
-    })
+  succesfulAuth() {
+    this.setState({authenticated: true});
+  }
+  loginAuth(state, cb) {
+    var formData = new FormData();
+    formData.append('username', state.username);
+    formData.append('password', state.password);
+    var request = new XMLHttpRequest();
+    request.open('POST', '/');
+    request.onload = function () {
+      cb(JSON.parse(this.responseText));
+    }
+    request.send(formData);
   };
   componentDidMount() {
     console.log(this.state);
@@ -41,6 +38,7 @@ class Root extends React.Component {
           <Main
             authenticated={this.state.authenticated}
             loginAuth={this.loginAuth}
+            succesfulAuth={this.successfulAuth}
           />
         </main>
         <footer>

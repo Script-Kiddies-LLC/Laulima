@@ -1,7 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify
 import json
 import urlparse
 from selenium import webdriver
@@ -60,7 +60,6 @@ def static_proxy(path):
 
 @app.route('/', methods=['POST'])
 def handle_data():
-    print request.form
     if (not request.form['username'] or not request.form['password']):
         return redirect(url_for('index'))
     driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
@@ -80,11 +79,15 @@ def handle_data():
     # If Valid, grab data from index page and display
     # Else Send Back Response
     if (str(elements[0].text) == 'Invalid login'):
-        print 'Invalid Login!'
+        driver.quit()
+        return jsonify(status_code=401,
+            text='Unsuccessful Authentication.'
+        )
     else:
-        print 'Valid Login!'
-
-    driver.quit()
+        driver.quit()
+        return jsonify(status_code=200,
+            text='Successful Authentication!'
+        )
     return redirect(url_for('index'))
 
 @app.route('/favicon.ico')

@@ -9,9 +9,13 @@ class Root extends React.Component {
     return (
       <div>
         {!this.props.authenticated ? (
-          <Login loginAuth={this.props.loginAuth}/>
+          <Login
+            loginAuth={this.props.loginAuth}
+            succesfulAuth={this.props.succesfulAuth}
+            rerender={this.rerender}
+          />
         ) : (
-          <h1> Main </h1>
+          <h1> Authenticated Successfully </h1>
         )}
       </div>
     );
