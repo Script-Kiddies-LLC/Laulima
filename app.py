@@ -6,6 +6,7 @@ import json
 import urlparse
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import time
 
 app = Flask(__name__)
 
@@ -13,7 +14,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/data')
+@app.route('/data', methods=['POST'])
 def data():
     return render_template('index.html')
 
@@ -54,7 +55,8 @@ def handle_data():
     drop = driver.find_elements_by_class_name('drop')
     for span in drop:
         span.click()
-
+    # Hack to fix html parsing too fast
+    time.sleep(1)
     soup = BeautifulSoup(driver.page_source, 'lxml')
     # Content
     titles = []

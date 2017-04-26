@@ -7,12 +7,14 @@ class Root extends React.Component {
     super(props, context);
     this.state = {
       authenticated: false,
-      nav: []
+      nav: [],
+      body: {}
     }
     this.loginAuth = this.loginAuth.bind(this);
     this.successfulAuth = this.succesfulAuth.bind(this);
   };
   succesfulAuth(status) {
+    this.setState({body: status.data.body});
     this.setState({nav: status.data.nav});
     this.setState({authenticated: true});
   }

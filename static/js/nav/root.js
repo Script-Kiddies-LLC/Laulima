@@ -28,15 +28,15 @@ class Root extends React.Component {
             <ul className="collapsible collapsible-accordion">
               {this.props.tabs.map(function(row, i) {
                 return(
-                  <li class="bold">
-                    <a class="collapsible-header waves-effect waves-teal">
+                  <li key={i} className="bold">
+                    <a className="collapsible-header waves-effect waves-teal">
                       { row.text }
                     </a>
-                    <div class="collapsible-body">
+                    <div className="collapsible-body">
                       <ul>
                         {row.a.map(function(col, j) {
                           return(
-                            <li>
+                            <li key={j}>
                               <a href={col.href}>{col.text}</a>
                             </li>
                           )
