@@ -1,7 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, jsonify, make_response
 import json
 import urlparse
 from selenium import webdriver
@@ -16,6 +16,9 @@ def index():
 
 @app.route('/data', methods=['POST'])
 def data():
+    if (not request.form['username'] or not request.form['password']):
+        return redirect(url_for('index'))
+
     return render_template('index.html')
 
 @app.route('/<path:path>')
@@ -92,12 +95,16 @@ def handle_data():
         driver.quit()
         json['status_code'] = 401
         json['text'] = 'Unsuccessful Authentication.'
-        return jsonify(json)
+        resp = make_response(jsonify(json))
+        return resp
     else:
         driver.quit()
         json['status_code'] = 200
         json['text'] = 'Successful Authentication!'
-        return jsonify(json)
+        resp = make_response(jsonify(json))
+        resp.set_cookie('username', request.form['username'])
+        resp.set_cookie('password', request.form['password'])
+        return resp
 
 @app.route('/favicon.ico')
 def favicon():
